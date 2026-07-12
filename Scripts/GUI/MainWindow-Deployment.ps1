@@ -423,23 +423,23 @@ function Update-UserSelectionDescription {
         0 {
             $currentUserName = GetUserName
             if ([string]::IsNullOrWhiteSpace($currentUserName)) {
-                $UserSelectionDescription.Text = "The currently logged-in user profile"
+                $UserSelectionDescription.Text = Get-ZhCnUiText 'The currently logged-in user profile'
             }
             else {
-                $UserSelectionDescription.Text = "The currently logged-in user profile: $currentUserName"
+                $UserSelectionDescription.Text = "$(Get-ZhCnUiText 'The currently logged-in user profile'): $currentUserName"
             }
         }
         1 {
             $targetUserName = $OtherUsernameTextBox.Text.Trim()
             if ([string]::IsNullOrWhiteSpace($targetUserName)) {
-                $UserSelectionDescription.Text = "A different user profile on this system"
+                $UserSelectionDescription.Text = Get-ZhCnUiText 'A different user profile on this system'
             }
             else {
-                $UserSelectionDescription.Text = "A different user profile on this system: $targetUserName"
+                $UserSelectionDescription.Text = "$(Get-ZhCnUiText 'A different user profile on this system'): $targetUserName"
             }
         }
         default {
-            $UserSelectionDescription.Text = "The default user template, affecting all new users created after this point. Useful for Sysprep deployment."
+            $UserSelectionDescription.Text = Get-ZhCnUiText 'The default user template, affecting all new users created after this point. Useful for Sysprep deployment.'
         }
     }
 

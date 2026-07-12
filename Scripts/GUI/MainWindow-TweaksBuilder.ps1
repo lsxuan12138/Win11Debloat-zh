@@ -13,6 +13,8 @@ function Build-DynamicTweaks {
         throw "Unable to load Features.json file. The GUI cannot continue without feature definitions."
     }
 
+    $featuresJson = ConvertTo-ZhCnFeatureConfig -Config $featuresJson
+
     # Column containers
     $col0 = $Window.FindName('Column0Panel')
     $col1 = $Window.FindName('Column1Panel')
@@ -141,7 +143,7 @@ function Build-DynamicTweaks {
         $headerRow.Children.Add($icon) | Out-Null
 
         $header = New-Object System.Windows.Controls.TextBlock
-        $header.Text = $categoryName
+        $header.Text = Get-ZhCnUiText $categoryName
         $header.Style = $Window.Resources['CategoryHeaderTextBlock']
         $headerRow.Children.Add($header) | Out-Null
 
@@ -151,7 +153,7 @@ function Build-DynamicTweaks {
 
         $helpBtn = New-Object System.Windows.Controls.Button
         $helpBtn.Content = $helpIcon
-        $helpBtn.ToolTip = "Open the wiki for more info on '$categoryName' tweaks"
+        $helpBtn.ToolTip = "打开 Wiki，查看“$(Get-ZhCnUiText $categoryName)”调整的更多信息"
         $helpBtn.Tag = (GetWikiUrlForCategory -category $categoryName)
         $helpBtn.Style = $Window.Resources['CategoryHelpLinkButtonStyle']
         $helpBtn.Add_Click({
@@ -287,7 +289,7 @@ function Build-DynamicTweaks {
                         $soleFeature = $featureMap[$soleFid]
                         $opt = 'Apply'
                         if ($soleFeature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($soleFeature.FeatureId -match '^Enable') { $opt = 'Enable' }
-                        $items = @('No Change', $opt)
+                        $items = @((Get-ZhCnUiText 'No Change'), (Get-ZhCnUiText $opt))
                         $comboName = ("Feature_{0}_Combo" -f $soleFeature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
                         if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                         $combo = CreateLabeledCombo -parent $panel -labelText $soleFeature.Label -comboName $comboName -items $items
@@ -312,7 +314,7 @@ function Build-DynamicTweaks {
                     continue
                 }
 
-                $items = @('No Change') + ($filteredValues | ForEach-Object { $_.Label })
+                $items = @((Get-ZhCnUiText 'No Change')) + ($filteredValues | ForEach-Object { $_.Label })
                 $comboName = 'Group_{0}Combo' -f $group.GroupId
                 if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                 $combo = CreateLabeledCombo -parent $panel -labelText $group.Label -comboName $comboName -items $items
@@ -333,7 +335,7 @@ function Build-DynamicTweaks {
                 $feature = $item.Data
                 $opt = 'Apply'
                 if ($feature.FeatureId -match '^Disable') { $opt = 'Disable' } elseif ($feature.FeatureId -match '^Enable') { $opt = 'Enable' }
-                $items = @('No Change', $opt)
+                $items = @((Get-ZhCnUiText 'No Change'), (Get-ZhCnUiText $opt))
                 $comboName = ("Feature_{0}_Combo" -f $feature.FeatureId) -replace '[^a-zA-Z0-9_]', ''
                 if (-not $panel) { $panel = GetOrCreateCategoryCard -categoryObj $categoryObj }
                 $combo = CreateLabeledCombo -parent $panel -labelText $feature.Label -comboName $comboName -items $items

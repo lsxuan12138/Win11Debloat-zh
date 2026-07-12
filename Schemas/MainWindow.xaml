@@ -972,7 +972,7 @@
                                 <Button x:Name="ReviewChangesBtn" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center" Margin="0,4,0,10" AutomationProperties.Name="Review selected changes">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <TextBlock x:Name="LinkText" Text="Review selected changes" FontSize="16" Foreground="{DynamicResource ButtonBgColor}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <TextBlock x:Name="LinkText" Text="查看已选择的更改" FontSize="16" Foreground="{DynamicResource ButtonBgColor}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter TargetName="LinkText" Property="Foreground" Value="{DynamicResource ButtonHoverColor}"/>

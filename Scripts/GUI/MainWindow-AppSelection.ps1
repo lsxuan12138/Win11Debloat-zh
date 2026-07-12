@@ -158,7 +158,7 @@ function Update-AppSelectionStatus {
             $selectedCount++
         }
     }
-    $AppSelectionStatus.Text = "$selectedCount app(s) selected for removal"
+    $AppSelectionStatus.Text = "$selectedCount $(Get-ZhCnUiText 'app(s) selected for removal')"
 
     if ($AppRemovalScopeCombo -and $AppRemovalScopeSection -and $AppRemovalScopeDescription) {
         if ($selectedCount -gt 0) {
@@ -182,15 +182,15 @@ function Update-AppRemovalScopeDescription {
 
     $selectedItem = $AppRemovalScopeCombo.SelectedItem
     if ($selectedItem) {
-        switch ($selectedItem.Content) {
-            "All users" {
-                $AppRemovalScopeDescription.Text = "Apps will be removed for all users and from the Windows image to prevent reinstallation for new users."
+        switch ($AppRemovalScopeCombo.SelectedIndex) {
+            0 {
+                $AppRemovalScopeDescription.Text = Get-ZhCnUiText 'Apps will be removed for all users and from the Windows image to prevent reinstallation for new users.'
             }
-            "Current user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the current user."
+            1 {
+                $AppRemovalScopeDescription.Text = Get-ZhCnUiText 'Apps will only be removed for the current user.'
             }
-            "Target user only" {
-                $AppRemovalScopeDescription.Text = "Apps will only be removed for the specified target user."
+            2 {
+                $AppRemovalScopeDescription.Text = Get-ZhCnUiText 'Apps will only be removed for the specified target user.'
             }
         }
     }
@@ -394,9 +394,9 @@ function Load-AppsWithList {
         [System.Windows.Controls.Grid]::SetColumn($tbName, 1)
 
         $tbDesc = New-Object System.Windows.Controls.TextBlock
-        $tbDesc.Text = $app.Description
+        $tbDesc.Text = Get-ZhCnUiText $app.Description
         $tbDesc.Style = $Window.Resources['AppDescTextStyle']
-        $tbDesc.ToolTip = $app.Description
+        $tbDesc.ToolTip = Get-ZhCnUiText $app.Description
         [System.Windows.Controls.Grid]::SetColumn($tbDesc, 2)
 
         $tbId = New-Object System.Windows.Controls.TextBlock

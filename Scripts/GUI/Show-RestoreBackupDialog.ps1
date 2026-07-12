@@ -49,7 +49,7 @@ function Show-RestoreBackupDialog {
         throw 'Restore backup window schema file could not be found.'
     }
 
-    $xaml = Get-Content -Path $schemaPath -Raw
+    $xaml = Get-Content -Path $schemaPath -Raw -Encoding UTF8
 
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
@@ -58,6 +58,7 @@ function Show-RestoreBackupDialog {
     finally {
         $reader.Close()
     }
+    ConvertTo-ZhCnUi -Root $window
 
     if ($ownerWindow) {
         try {
@@ -172,10 +173,10 @@ function Show-RestoreBackupDialog {
         $isAutoBackupEnabled = ($startMenuAutoBackupCheck.IsChecked -eq $true)
         $hasSelectedManualFile = -not [string]::IsNullOrWhiteSpace($state.SelectedStartMenuBackupFilePath)
         if ($isAutoBackupEnabled -or $hasSelectedManualFile) {
-            $primaryActionBtn.Content = 'Restore backup'
+            $primaryActionBtn.Content = Get-ZhCnUiText 'Restore backup'
         }
         else {
-            $primaryActionBtn.Content = 'Select backup file'
+            $primaryActionBtn.Content = Get-ZhCnUiText 'Select backup file'
         }
     }
 
@@ -188,7 +189,7 @@ function Show-RestoreBackupDialog {
         $titleText.Text = 'Restore Backup'
         $restoreModeTabs.SelectedIndex = 0
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Cancel'
+        $backBtn.Content = Get-ZhCnUiText 'Cancel'
         $primaryActionBtn.Visibility = 'Collapsed'
         $chooseRegistryBtn.IsDefault = $true
         $primaryActionBtn.IsDefault = $false
@@ -202,9 +203,9 @@ function Show-RestoreBackupDialog {
         $overviewFeaturesSection.Visibility = 'Visible'
         $overviewSummaryText.Visibility = 'Collapsed'
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-ZhCnUiText 'Back'
         $primaryActionBtn.Visibility = 'Visible'
-        $primaryActionBtn.Content = 'Select backup file'
+        $primaryActionBtn.Content = Get-ZhCnUiText 'Select backup file'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
     }
@@ -213,7 +214,7 @@ function Show-RestoreBackupDialog {
         $titleText.Text = 'Restore Start Menu Backup'
         $restoreModeTabs.SelectedIndex = 2
         $backBtn.Visibility = 'Visible'
-        $backBtn.Content = 'Back'
+        $backBtn.Content = Get-ZhCnUiText 'Back'
         $primaryActionBtn.Visibility = 'Visible'
         $primaryActionBtn.IsDefault = $true
         $chooseRegistryBtn.IsDefault = $false
@@ -330,7 +331,7 @@ function Show-RestoreBackupDialog {
         }
 
         $state.SelectedRegistryBackup = $selectedBackup
-        $primaryActionBtn.Content = 'Restore from backup'
+        $primaryActionBtn.Content = Get-ZhCnUiText 'Restore from backup'
     }
 
     $handleStartMenuPrimaryAction = {

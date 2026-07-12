@@ -17,7 +17,7 @@ function Show-AppSelectionWindow {
     }
 
     # Load XAML from file
-    $xaml = Get-Content -Path $script:AppSelectionSchema -Raw
+    $xaml = Get-Content -Path $script:AppSelectionSchema -Raw -Encoding UTF8
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -25,6 +25,7 @@ function Show-AppSelectionWindow {
     finally {
         $reader.Close()
     }
+    ConvertTo-ZhCnUi -Root $window
     
     # Set owner to main window if it exists
     if ($script:GuiWindow) {
@@ -78,7 +79,7 @@ function Show-AppSelectionWindow {
             $checkbox.Tag = $_.AppIdDisplay
             Add-Member -InputObject $checkbox -MemberType NoteProperty -Name 'AppIds' -Value @($_.AppId)
             $checkbox.IsChecked = $_.IsChecked
-            $checkbox.ToolTip = $_.Description
+            $checkbox.ToolTip = Get-ZhCnUiText $_.Description
             $checkbox.Style = $window.Resources["AppsPanelCheckBoxStyle"]
             
             # Attach shift-click behavior for range selection

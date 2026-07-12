@@ -35,7 +35,7 @@ function Show-ImportExportConfigWindow {
         return $null
     }
 
-    $xaml = Get-Content -Path $schemaPath -Raw
+    $xaml = Get-Content -Path $schemaPath -Raw -Encoding UTF8
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $dlg = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -43,6 +43,7 @@ function Show-ImportExportConfigWindow {
     finally {
         $reader.Close()
     }
+    ConvertTo-ZhCnUi -Root $dlg
 
     $dlg.Owner = $Owner
     SetWindowThemeResources -window $dlg -usesDarkMode $UsesDarkMode
@@ -75,7 +76,7 @@ function Show-ImportExportConfigWindow {
 
         # Create checkbox
         $cb = New-Object System.Windows.Controls.CheckBox
-        $cb.Content = $cat
+        $cb.Content = Get-ZhCnUiText $cat
         $cb.IsChecked = $true
         $cb.Margin = [System.Windows.Thickness]::new(0,0,0,4)
         $cb.FontSize = 14

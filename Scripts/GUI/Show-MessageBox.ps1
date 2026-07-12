@@ -46,7 +46,7 @@ function Show-MessageBox {
     }
     
     # Load XAML from file
-    $xaml = Get-Content -Path $script:MessageBoxSchema -Raw
+    $xaml = Get-Content -Path $script:MessageBoxSchema -Raw -Encoding UTF8
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $msgWindow = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -54,6 +54,7 @@ function Show-MessageBox {
     finally {
         $reader.Close()
     }
+    ConvertTo-ZhCnUi -Root $msgWindow
     
     # Set owner to owner window if it exists
     if ($ownerWindow) {
@@ -80,8 +81,8 @@ function Show-MessageBox {
     $titleBar = $msgWindow.FindName('TitleBar')
     
     # Set title and message
-    $titleText.Text = $Title
-    $messageText.Text = $Message
+    $titleText.Text = Get-ZhCnUiText $Title
+    $messageText.Text = Get-ZhCnUiText $Message
     
     # Configure icon
     switch ($Icon) {
@@ -118,22 +119,22 @@ function Show-MessageBox {
     # Configure buttons - store result in window's Tag property
     switch ($Button) {
         'OK' {
-            $button1.Content = 'OK'
+            $button1.Content = Get-ZhCnUiText 'OK'
             $button1.Add_Click({ $msgWindow.Tag = 'OK'; $msgWindow.Close() })
             $button2.Visibility = 'Collapsed'
             # Right-align sole button by moving it to column 1
             [System.Windows.Controls.Grid]::SetColumn($button1, 1)
         }
         'OKCancel' {
-            $button1.Content = 'OK'
-            $button2.Content = 'Cancel'
+            $button1.Content = Get-ZhCnUiText 'OK'
+            $button2.Content = Get-ZhCnUiText 'Cancel'
             $button1.Add_Click({ $msgWindow.Tag = 'OK'; $msgWindow.Close() })
             $button2.Add_Click({ $msgWindow.Tag = 'Cancel'; $msgWindow.Close() })
             $button2.Visibility = 'Visible'
         }
         'YesNo' {
-            $button1.Content = 'Yes'
-            $button2.Content = 'No'
+            $button1.Content = Get-ZhCnUiText 'Yes'
+            $button2.Content = Get-ZhCnUiText 'No'
             $button1.Add_Click({ $msgWindow.Tag = 'Yes'; $msgWindow.Close() })
             $button2.Add_Click({ $msgWindow.Tag = 'No'; $msgWindow.Close() })
             $button2.Visibility = 'Visible'

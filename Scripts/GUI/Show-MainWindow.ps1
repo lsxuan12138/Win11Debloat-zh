@@ -5,7 +5,7 @@
     $usesDarkMode = GetSystemUsesDarkMode
 
     # ---- Load XAML ----
-    $xaml = Get-Content -Path $script:MainWindowSchema -Raw
+    $xaml = Get-Content -Path $script:MainWindowSchema -Raw -Encoding UTF8
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $window = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -13,6 +13,8 @@
     finally {
         $reader.Close()
     }
+
+    ConvertTo-ZhCnUi -Root $window
 
     SetWindowThemeResources -window $window -usesDarkMode $usesDarkMode
 
@@ -497,12 +499,11 @@
         param($sourceControl, $e)
         if ($e.Key -eq [System.Windows.Input.Key]::F -and
             ([System.Windows.Input.Keyboard]::Modifiers -band [System.Windows.Input.ModifierKeys]::Control)) {
-            $currentTab = $tabControl.SelectedItem
-            if ($currentTab.Header -eq "App Removal" -and $appSearchBox) {
+            if ($tabControl.SelectedIndex -eq 1 -and $appSearchBox) {
                 $appSearchBox.Focus()
                 $e.Handled = $true
             }
-            elseif ($currentTab.Header -eq "Tweaks" -and $tweakSearchBox) {
+            elseif ($tabControl.SelectedIndex -eq 2 -and $tweakSearchBox) {
                 $tweakSearchBox.Focus()
                 $e.Handled = $true
             }
@@ -670,10 +671,10 @@
 
             $selectedScopeItem = $appRemovalScopeCombo.SelectedItem
             if ($selectedScopeItem) {
-                switch ($selectedScopeItem.Content) {
-                    "All users" { AddParameter 'AppRemovalTarget' 'AllUsers' }
-                    "Current user only" { AddParameter 'AppRemovalTarget' 'CurrentUser' }
-                    "Target user only" { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
+                switch ($appRemovalScopeCombo.SelectedIndex) {
+                    0 { AddParameter 'AppRemovalTarget' 'AllUsers' }
+                    1 { AddParameter 'AppRemovalTarget' 'CurrentUser' }
+                    2 { AddParameter 'AppRemovalTarget' ($otherUsernameTextBox.Text.Trim()) }
                 }
             }
         }
@@ -756,7 +757,7 @@
             if ($userSelectionCombo -and $userSelectionCombo.Items.Count -gt 0) {
                 $currentUserItem = $userSelectionCombo.Items[0]
                 if ($currentUserItem -is [System.Windows.Controls.ComboBoxItem]) {
-                    $currentUserItem.Content = "Current User ($(GetUserName))"
+                    $currentUserItem.Content = "$(Get-ZhCnUiText 'Current User') ($(GetUserName))"
                 }
             }
 

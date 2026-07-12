@@ -353,6 +353,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/LoadAppPresetsFromJson.ps1"
 
 # GUI functions
+. "$PSScriptRoot/Scripts/GUI/Localization.zh-CN.ps1"
 . "$PSScriptRoot/Scripts/GUI/GetSystemUsesDarkMode.ps1"
 . "$PSScriptRoot/Scripts/GUI/SetWindowThemeResources.ps1"
 . "$PSScriptRoot/Scripts/GUI/AttachShiftClickBehavior.ps1"

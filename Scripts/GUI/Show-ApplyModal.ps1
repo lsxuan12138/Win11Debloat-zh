@@ -26,7 +26,7 @@ function Show-ApplyModal {
     }
     
     # Load XAML from file
-    $xaml = Get-Content -Path $script:ApplyChangesWindowSchema -Raw
+    $xaml = Get-Content -Path $script:ApplyChangesWindowSchema -Raw -Encoding UTF8
     $reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xaml))
     try {
         $applyWindow = [System.Windows.Markup.XamlReader]::Load($reader)
@@ -34,6 +34,7 @@ function Show-ApplyModal {
     finally {
         $reader.Close()
     }
+    ConvertTo-ZhCnUi -Root $applyWindow
     
     # Set owner to owner window if it exists
     if ($ownerWindow) {
